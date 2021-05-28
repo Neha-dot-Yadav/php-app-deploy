@@ -1,0 +1,14 @@
+http {
+
+	upstream mysite{
+		server 172.31.91.168
+	}
+	
+	server {
+	
+		location / {
+		
+			proxy_pass http://mysite;
+		}
+	}
+}

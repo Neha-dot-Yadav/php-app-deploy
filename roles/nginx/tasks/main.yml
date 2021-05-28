@@ -1,0 +1,36 @@
+---
+# tasks file for nginx
+
+- name: installing nginx
+  yum:
+   name: nginx
+   state: present
+  delegate_to: "{{ loadbalancer }}"
+  
+- name: setting the configurations
+  replace:
+   path: /etc/nginx/nginx.conf
+   regexp:  '^\s*server \s*{\s+((.*\s+)*)'
+   replace: 'upstream mysite{
+		server <your_server_ip>
+	}
+	
+	server {
+	listen 80; 
+		location / {
+		
+			proxy_pass http://mysite;
+		}
+	}
+}'
+  delegate_to: "{{ loadbalancer }}"
+  
+
+- name: reloading nginx
+  systemd:
+   name: nginx.service
+   state: started
+   daemon_reload: yes
+   enabled: yes
+  delegate_to: "{{ loadbalancer }}"  
+    
