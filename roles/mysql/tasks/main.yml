@@ -1,33 +1,35 @@
 ---
 # tasks file for mysql
 
-  - name: installing mysql
-    yum:
-     name:
-       - mariadb-server
-       - mariadb
-     state: latest
+- name: installing mysql
+  yum:
+   name:
+     - mariadb-server
+     - mariadb
+   state: latest
 
-  - name: enabling and starting mysql
-    service:
-        name: mysqld
-        enabled: yes
-        state: started
+- name: enabling and starting mysql
+  service:
+   name: mysqld
+   enabled: yes
+   state: started
 
-  - name: creating database
-    mysql_db:
-     name: reviews
-     state: present
-     login_user: root
-     login_password: "{{ mysql_root_password }}"
+- name: creating database
+  mysql_db:
+   name: reviews
+   state: present
+   login_user: root
+   login_password: "{{ mysql_root_password }}"
 
-  - name: creating table and adding sample data 
-    copy: src=dump.sql dest=/tmp/dump.sql
+- name: creating table and adding sample data 
+  copy: 
+   src: dump.sql 
+   dest: /tmp/dump.sql
 
-  - name: inserting sample data into database
-    mysql_db:
-     name: reviews
-     state: import
-     target: /tmp/dump.sql
-     login_user: root
-     login_password: "{{ mysql_root_password }}"
+- name: inserting sample data into database
+  mysql_db:
+   name: reviews
+   state: import
+   target: /tmp/dump.sql
+   login_user: root
+   login_password: "{{ mysql_root_password }}"
